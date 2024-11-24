@@ -57,13 +57,14 @@ export class AwsExam2410GgStack extends cdk.Stack {
     // Add S3 event notification to trigger the Lambda function
       bucket.addEventNotification(s3.EventType.OBJECT_CREATED, new s3n.LambdaDestination(writeMetadataFunction));
 
-    // EC2 Instance
-      const vpc = new ec2.Vpc(this, 'Exam-GG-Vpc', { maxAzs: 2 });
-      const instance = new ec2.Instance(this, 'Exam-GG-Instance', {
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO),
-      machineImage: ec2.MachineImage.latestAmazonLinux2(), 
-      vpc,
-      userData: ec2.UserData.custom(`
+       // EC2 Instance
+       const vpc = new ec2.Vpc(this, 'Exam-GG-Vpc', { maxAzs: 2 });
+       const instance = new ec2.Instance(this, 'Exam-GG-Instance', {
+         instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO),
+         machineImage: ec2.MachineImage.latestAmazonLinux2(), // or ec2.MachineImage.latestAmazonLinux2023()
+         vpc,
+         keyName: 'Exam-GG-keyPair', // Specify your key pair name here
+         userData: ec2.UserData.custom(`
         #!/bin/bash
         yum update -y
         yum install -y httpd php
@@ -114,8 +115,10 @@ export class AwsExam2410GgStack extends cdk.Stack {
             }
         }
         ?>' > /var/www/html/upload/upload.php
-      `)
-    });
+      `),
+         vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
+          associatePublicIpAddress: true
+       });
     
 
     // Add IAM Role to EC2 Instance

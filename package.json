@@ -27,7 +27,11 @@
     "@aws-cdk/aws-s3": "^1.203.0",
     "@aws-cdk/aws-sns": "^1.203.0",
     "@aws-cdk/aws-sns-subscriptions": "^1.203.0",
+    "@types/aws-lambda": "^8.10.145",
+    "@types/aws-sdk": "^0.0.42",
     "aws-cdk-lib": "2.170.0",
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1692.0",
     "constructs": "^10.0.0"
   }
 }
